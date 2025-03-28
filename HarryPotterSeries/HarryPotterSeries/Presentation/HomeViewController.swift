@@ -9,10 +9,18 @@ import UIKit
 import Combine
 
 final class HomeViewController: UIViewController {
+    // MARK: - Properties
     private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var books: [Book] = []
     
+    // MARK: - View
+    let homeView = HomeView()
+    
+    override func loadView() {
+        view = homeView
+    }
+    
+    // MARK: - Init
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -22,18 +30,21 @@ final class HomeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        bindViewModel()
+        view.backgroundColor = .white
         viewModel.loadBooks()
+        bindViewModel()
     }
     
+    // MARK: - Methods
     private func bindViewModel() {
         viewModel.$books
             .receive(on: DispatchQueue.main)
             .sink { [weak self] books in
-                self?.books = books
+                self?.homeView.configureView(with: books[0])
             }
             .store(in: &cancellables)
     }

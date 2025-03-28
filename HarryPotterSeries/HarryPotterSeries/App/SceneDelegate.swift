@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let useCase = FetchBooksUseCase()
         let viewModel = HomeViewModel(fetchBookUseCase: useCase)
         window.rootViewController = HomeViewController(viewModel: viewModel)
+        self.window = window
         window.makeKeyAndVisible()
     }
 
