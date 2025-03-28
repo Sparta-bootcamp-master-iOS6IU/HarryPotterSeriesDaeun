@@ -11,6 +11,7 @@ final class HomeViewModel {
     private let fetchBookUseCase: FetchBooksUseCase
     @Published private(set) var books: [Book] = []
     @Published private(set) var selectedBook: Book?
+    @Published private(set) var errorMessage: String?
     
     init(fetchBookUseCase: FetchBooksUseCase) {
         self.fetchBookUseCase = fetchBookUseCase
@@ -21,9 +22,9 @@ final class HomeViewModel {
             books = try fetchBookUseCase.execute()
             selectedBook = books[0]
         } catch let error as DataError {
-            print(error.errorDescription)
+            self.errorMessage = error.errorDescription
         } catch {
-            print(error.localizedDescription)
+            self.errorMessage = error.localizedDescription
         }
     }
 }
