@@ -41,10 +41,11 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Methods
     private func bindViewModel() {
-        viewModel.$books
+        viewModel.$selectedBook
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] books in
-                self?.homeView.configureView(with: books[0])
+            .sink { [weak self] book in
+                guard let book else { return }
+                self?.homeView.configureView(with: book)
             }
             .store(in: &cancellables)
     }

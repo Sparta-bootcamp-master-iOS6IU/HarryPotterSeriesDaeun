@@ -10,6 +10,7 @@ import Foundation
 final class HomeViewModel {
     private let fetchBookUseCase: FetchBooksUseCase
     @Published private(set) var books: [Book] = []
+    @Published private(set) var selectedBook: Book?
     
     init(fetchBookUseCase: FetchBooksUseCase) {
         self.fetchBookUseCase = fetchBookUseCase
@@ -18,6 +19,7 @@ final class HomeViewModel {
     func loadBooks() {
         do {
             books = try fetchBookUseCase.execute()
+            selectedBook = books[0]
         } catch let error as DataError {
             print(error.errorDescription)
         } catch {
