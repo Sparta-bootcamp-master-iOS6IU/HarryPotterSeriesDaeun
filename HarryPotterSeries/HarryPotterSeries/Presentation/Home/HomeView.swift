@@ -23,6 +23,8 @@ final class HomeView: UIView {
         $0.layer.cornerRadius = 20
     }
     
+    private let bookInfoView = BookInfoView()
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -40,7 +42,8 @@ final class HomeView: UIView {
     private func setupAddViews() {
         [
             titleLabel,
-            seriesButton
+            seriesButton,
+            bookInfoView
         ].forEach { addSubview($0) }
     }
     
@@ -55,11 +58,17 @@ final class HomeView: UIView {
             make.centerX.equalToSuperview()
             make.width.height.equalTo(40)
         }
+        
+        bookInfoView.snp.makeConstraints { make in
+            make.top.equalTo(seriesButton.snp.bottom).offset(24)
+            make.horizontalEdges.equalTo(safeAreaLayoutGuide.snp.horizontalEdges).inset(5)
+        }
     }
     
     func configureView(with book: Book) {
         titleLabel.text = book.title
         seriesButton.setTitle("1", for: .normal)
+        bookInfoView.configureView(with: book)
     }
 
 }
