@@ -6,6 +6,7 @@
 //
 
 struct Book: Codable {
+    var seriesNumber: Int? = nil
     let title: String
     let author: String
     let pages: Int
@@ -16,6 +17,7 @@ struct Book: Codable {
     let chapters: [Chapter]
     
     enum CodingKeys: String, CodingKey {
+        case seriesNumber
         case title
         case author
         case pages

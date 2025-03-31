@@ -80,8 +80,8 @@ final class BookInfoView: UIView {
     }
     
     func configureView(with book: Book) {
-        // TODO: imageView
-        bookCoverImageView.layer.borderWidth = 1
+        let seriesNumber = String(book.seriesNumber!)
+        bookCoverImageView.image = UIImage(named: BookCoverImage.harrypotter + seriesNumber)
         bookTitleLabel.text = book.title
         authorLabel.setContent(book.author)
         releasedDateLabel.setContent(book.releaseDate)

@@ -67,7 +67,7 @@ final class HomeView: UIView {
     
     func configureView(with book: Book) {
         titleLabel.text = book.title
-        seriesButton.setTitle("1", for: .normal)
+        seriesButton.setTitle(String(book.seriesNumber!), for: .normal)
         bookInfoView.configureView(with: book)
     }
 

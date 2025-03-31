@@ -12,3 +12,7 @@ enum AlertTitle {
 enum AlertActionTitle {
     static let check = "확인"
 }
+
+enum BookCoverImage {
+    static let harrypotter = "harrypotter"
+}
