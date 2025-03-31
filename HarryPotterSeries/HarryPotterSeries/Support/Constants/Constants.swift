@@ -16,3 +16,8 @@ enum AlertActionTitle {
 enum BookCoverImage {
     static let harrypotter = "harrypotter"
 }
+
+enum DateFormat: String {
+    case apiDate = "yyyy-mm-dd"
+    case displayDate = "MMMM dd, yyyy"
+}

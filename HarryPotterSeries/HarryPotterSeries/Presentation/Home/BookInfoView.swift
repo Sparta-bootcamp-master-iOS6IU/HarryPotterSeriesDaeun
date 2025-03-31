@@ -80,11 +80,10 @@ final class BookInfoView: UIView {
     }
     
     func configureView(with book: Book) {
-        let seriesNumber = String(book.seriesNumber!)
-        bookCoverImageView.image = UIImage(named: BookCoverImage.harrypotter + seriesNumber)
+        bookCoverImageView.image = UIImage(named: book.coverImageName)
         bookTitleLabel.text = book.title
         authorLabel.setContent(book.author)
-        releasedDateLabel.setContent(book.releaseDate)
+        releasedDateLabel.setContent(book.formattedReleasedDate)
         pagesLabel.setContent(String(book.pages))
     }
 }

@@ -28,3 +28,14 @@ struct Book: Codable {
         case chapters
     }
 }
+
+extension Book {
+    var formattedReleasedDate: String {
+        releaseDate.formattedDate(from: DateFormat.apiDate.rawValue,
+                                  to: DateFormat.displayDate.rawValue) ?? "-"
+    }
+    
+    var coverImageName: String {
+        BookCoverImage.harrypotter + String(seriesNumber!)
+    }
+}
