@@ -26,13 +26,17 @@ final class HomeView: UIView {
     private let scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
     }
-    private let contentView = UIView()
+    private let contentStackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = BookSpacing.vertical
+        $0.alignment = .fill
+        $0.distribution = .equalSpacing
+    }
     
     private let bookInfoView = BookInfoView()
-    
     private let dedicationView = BookDescriptionView()
-    
     private let summaryView = BookDescriptionView()
+    private let chapterView = BookDescriptionView()
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -56,14 +60,15 @@ final class HomeView: UIView {
         ].forEach { addSubview($0) }
         
         [
-            contentView
+            contentStackView
         ].forEach { scrollView.addSubview($0) }
         
         [
             bookInfoView,
             dedicationView,
-            summaryView
-        ].forEach { contentView.addSubview($0) }
+            summaryView,
+            chapterView
+        ].forEach { contentStackView.addArrangedSubview($0) }
     }
     
     private func setupConstraints() {
@@ -83,24 +88,9 @@ final class HomeView: UIView {
             make.horizontalEdges.bottom.equalToSuperview()
         }
         
-        contentView.snp.makeConstraints { make in
+        contentStackView.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview()
             make.horizontalEdges.equalTo(safeAreaLayoutGuide.snp.horizontalEdges).inset(BookSpacing.horizontal)
-        }
-        
-        bookInfoView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.horizontalEdges.equalToSuperview()
-        }
-        
-        dedicationView.snp.makeConstraints { make in
-            make.top.equalTo(bookInfoView.snp.bottom).offset(BookSpacing.vertical)
-            make.horizontalEdges.equalToSuperview()
-        }
-        
-        summaryView.snp.makeConstraints { make in
-            make.top.equalTo(dedicationView.snp.bottom).offset(BookSpacing.vertical)
-            make.horizontalEdges.bottom.equalToSuperview()
         }
     }
     
@@ -108,8 +98,9 @@ final class HomeView: UIView {
         titleLabel.text = book.title
         seriesButton.setTitle(String(book.seriesNumber!), for: .normal)
         bookInfoView.configureView(with: book)
-        dedicationView.configureView(title: SectionTitle.dedication, content: book.dedication)
-        summaryView.configureView(title: SectionTitle.summary, content: book.summary)
+        dedicationView.configureView(title: SectionTitle.dedication, contents: [book.dedication])
+        summaryView.configureView(title: SectionTitle.summary, contents: [book.summary])
+        chapterView.configureView(title: SectionTitle.chapter, contents: book.chapters.map { $0.title })
     }
 
 }
