@@ -15,13 +15,13 @@ final class BookDescriptionView: UIView {
     
     private let titleLabel = UILabel().then {
         $0.numberOfLines = .zero
-        $0.font = .boldSystemFont(ofSize: 18)
+        $0.font = .boldSystemFont(ofSize: BookFontSize.title1)
         $0.textColor = .black
     }
     
     private let contentLabel = UILabel().then {
         $0.numberOfLines = .zero
-        $0.font = .systemFont(ofSize: 14)
+        $0.font = .systemFont(ofSize: BookFontSize.content)
         $0.textColor = .darkGray
     }
     
@@ -53,7 +53,7 @@ final class BookDescriptionView: UIView {
         }
         
         contentLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
+            make.top.equalTo(titleLabel.snp.bottom).offset(BookSpacing.labelToLabel)
             make.horizontalEdges.bottom.equalToSuperview()
         }
     }

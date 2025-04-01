@@ -30,14 +30,14 @@ final class BookInfoView: UIView {
         $0.numberOfLines = .zero
     }
     
-    private let authorLabel = TitleContentView(title: "Author",
+    private let authorLabel = TitleContentView(title: SectionTitle.author,
                                                   titleFontSize: 16,
                                                   contentFontSize: 18,
                                                   contentColor: .darkGray)
     
-    private let releasedDateLabel = TitleContentView(title: "ReleasedDate")
+    private let releasedDateLabel = TitleContentView(title: SectionTitle.releasedDate)
     
-    private let pagesLabel = TitleContentView(title: "Pages")
+    private let pagesLabel = TitleContentView(title: SectionTitle.pages)
     
     // MARK: - Init
     override init(frame: CGRect) {
