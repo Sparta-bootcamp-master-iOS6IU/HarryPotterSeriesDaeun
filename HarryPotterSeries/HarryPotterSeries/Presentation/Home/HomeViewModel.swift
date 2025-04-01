@@ -11,6 +11,11 @@ final class HomeViewModel {
     private let fetchBookUseCase: FetchBooksUseCase
     @Published private(set) var books: [Book] = []
     @Published private(set) var selectedBook: Book?
+    @Published private(set) var errorMessage: String?
+    var formattedReleaseDate: String {
+        selectedBook?.releaseDate.formattedDate(from: DateFormat.apiDate.rawValue,
+                                                  to: DateFormat.displayDate.rawValue) ?? "-"
+    }
     
     init(fetchBookUseCase: FetchBooksUseCase) {
         self.fetchBookUseCase = fetchBookUseCase
@@ -21,9 +26,9 @@ final class HomeViewModel {
             books = try fetchBookUseCase.execute()
             selectedBook = books[0]
         } catch let error as DataError {
-            print(error.errorDescription)
+            self.errorMessage = error.errorDescription
         } catch {
-            print(error.localizedDescription)
+            self.errorMessage = error.localizedDescription
         }
     }
 }

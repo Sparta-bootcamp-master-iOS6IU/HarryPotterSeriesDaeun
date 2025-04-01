@@ -16,7 +16,18 @@ final class DataService {
         do {
             let data = try Data(contentsOf: URL(fileURLWithPath: path))
             let bookResponse = try JSONDecoder().decode(BookResponse.self, from: data)
-            let books = bookResponse.data.map { $0.attributes }
+            let books = bookResponse.data.enumerated().map { index, data in
+                let attributes = data.attributes
+                return Book(seriesNumber: index + 1,
+                            title: attributes.title,
+                            author: attributes.author,
+                            pages: attributes.pages,
+                            releaseDate: attributes.releaseDate,
+                            dedication: attributes.dedication,
+                            summary: attributes.summary,
+                            wikiURL: attributes.wikiURL,
+                            chapters: attributes.chapters)
+            }
             return books
         } catch {
             throw DataError.parsingFailed

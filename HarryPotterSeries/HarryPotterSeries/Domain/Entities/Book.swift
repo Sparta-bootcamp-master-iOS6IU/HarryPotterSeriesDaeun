@@ -6,6 +6,7 @@
 //
 
 struct Book: Codable {
+    var seriesNumber: Int? = nil
     let title: String
     let author: String
     let pages: Int
@@ -16,6 +17,7 @@ struct Book: Codable {
     let chapters: [Chapter]
     
     enum CodingKeys: String, CodingKey {
+        case seriesNumber
         case title
         case author
         case pages
@@ -24,5 +26,16 @@ struct Book: Codable {
         case summary
         case wikiURL = "wiki"
         case chapters
+    }
+}
+
+extension Book {
+    var formattedReleasedDate: String {
+        releaseDate.formattedDate(from: DateFormat.apiDate.rawValue,
+                                  to: DateFormat.displayDate.rawValue) ?? "-"
+    }
+    
+    var coverImageName: String {
+        BookCoverImage.harrypotter + String(seriesNumber!)
     }
 }

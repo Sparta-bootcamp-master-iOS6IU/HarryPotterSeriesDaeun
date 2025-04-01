@@ -34,9 +34,8 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-        viewModel.loadBooks()
         bindViewModel()
+        viewModel.loadBooks()
     }
     
     // MARK: - Methods
@@ -46,6 +45,14 @@ final class HomeViewController: UIViewController {
             .sink { [weak self] book in
                 guard let book else { return }
                 self?.homeView.configureView(with: book)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$errorMessage
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] errorMessage in
+                self?.showAlert(title: AlertTitle.networkError, message: errorMessage)
             }
             .store(in: &cancellables)
     }
