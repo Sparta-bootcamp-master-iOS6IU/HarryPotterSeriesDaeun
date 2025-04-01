@@ -23,6 +23,11 @@ final class HomeView: UIView {
         $0.layer.cornerRadius = 20
     }
     
+    private let scrollView = UIScrollView().then {
+        $0.showsVerticalScrollIndicator = false
+    }
+    private let contentView = UIView()
+    
     private let bookInfoView = BookInfoView()
     
     private let dedicationView = BookDescriptionView()
@@ -47,10 +52,18 @@ final class HomeView: UIView {
         [
             titleLabel,
             seriesButton,
+            scrollView
+        ].forEach { addSubview($0) }
+        
+        [
+            contentView
+        ].forEach { scrollView.addSubview($0) }
+        
+        [
             bookInfoView,
             dedicationView,
             summaryView
-        ].forEach { addSubview($0) }
+        ].forEach { contentView.addSubview($0) }
     }
     
     private func setupConstraints() {
@@ -65,19 +78,29 @@ final class HomeView: UIView {
             make.width.height.equalTo(40)
         }
         
-        bookInfoView.snp.makeConstraints { make in
+        scrollView.snp.makeConstraints { make in
             make.top.equalTo(seriesButton.snp.bottom).offset(BookSpacing.vertical)
+            make.horizontalEdges.bottom.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.verticalEdges.equalToSuperview()
             make.horizontalEdges.equalTo(safeAreaLayoutGuide.snp.horizontalEdges).inset(BookSpacing.horizontal)
+        }
+        
+        bookInfoView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.horizontalEdges.equalToSuperview()
         }
         
         dedicationView.snp.makeConstraints { make in
             make.top.equalTo(bookInfoView.snp.bottom).offset(BookSpacing.vertical)
-            make.horizontalEdges.equalToSuperview().inset(BookSpacing.horizontal)
+            make.horizontalEdges.equalToSuperview()
         }
         
         summaryView.snp.makeConstraints { make in
             make.top.equalTo(dedicationView.snp.bottom).offset(BookSpacing.vertical)
-            make.horizontalEdges.equalToSuperview().inset(BookSpacing.horizontal)
+            make.horizontalEdges.bottom.equalToSuperview()
         }
     }
     
