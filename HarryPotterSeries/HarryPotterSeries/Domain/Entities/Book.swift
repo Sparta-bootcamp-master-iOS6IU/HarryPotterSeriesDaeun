@@ -31,8 +31,7 @@ struct Book: Codable {
 
 extension Book {
     var formattedReleasedDate: String {
-        releaseDate.formattedDate(from: DateFormat.apiDate.rawValue,
-                                  to: DateFormat.displayDate.rawValue) ?? "-"
+        releaseDate.formattedDate(from: .apiDate, to: .displayDate) ?? "-"
     }
     
     var coverImageName: String {
