@@ -12,10 +12,6 @@ final class HomeViewModel {
     @Published private(set) var books: [Book] = []
     @Published private(set) var selectedBook: Book?
     @Published private(set) var errorMessage: String?
-    var formattedReleaseDate: String {
-        selectedBook?.releaseDate.formattedDate(from: DateFormat.apiDate.rawValue,
-                                                  to: DateFormat.displayDate.rawValue) ?? "-"
-    }
     
     init(fetchBookUseCase: FetchBooksUseCase) {
         self.fetchBookUseCase = fetchBookUseCase

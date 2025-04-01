@@ -5,6 +5,8 @@
 //  Created by 곽다은 on 3/28/25.
 //
 
+import Foundation
+
 enum AlertTitle {
     static let networkError = "네트워크 오류"
 }
@@ -20,4 +22,24 @@ enum BookCoverImage {
 enum DateFormat: String {
     case apiDate = "yyyy-mm-dd"
     case displayDate = "MMMM dd, yyyy"
+}
+
+enum SectionTitle {
+    static let author = "Author"
+    static let releasedDate = "ReleasedDate"
+    static let pages = "Pages"
+    static let dedication = "Dedication"
+    static let summary = "Summary"
+}
+
+enum BookSpacing {
+    static let horizontal: CGFloat = 20
+    static let vertical: CGFloat = 24
+    static let labelToLabel: CGFloat = 8
+}
+
+enum BookFontSize {
+    static let title1: CGFloat = 18
+    static let title2: CGFloat = 14
+    static let content: CGFloat = 14
 }

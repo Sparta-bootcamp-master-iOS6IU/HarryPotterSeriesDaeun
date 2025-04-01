@@ -25,6 +25,10 @@ final class HomeView: UIView {
     
     private let bookInfoView = BookInfoView()
     
+    private let dedicationView = BookDescriptionView()
+    
+    private let summaryView = BookDescriptionView()
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -43,14 +47,16 @@ final class HomeView: UIView {
         [
             titleLabel,
             seriesButton,
-            bookInfoView
+            bookInfoView,
+            dedicationView,
+            summaryView
         ].forEach { addSubview($0) }
     }
     
     private func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide.snp.top).inset(10)
-            make.horizontalEdges.equalToSuperview().inset(20)
+            make.horizontalEdges.equalToSuperview().inset(BookSpacing.horizontal)
         }
         
         seriesButton.snp.makeConstraints { make in
@@ -60,8 +66,18 @@ final class HomeView: UIView {
         }
         
         bookInfoView.snp.makeConstraints { make in
-            make.top.equalTo(seriesButton.snp.bottom).offset(24)
-            make.horizontalEdges.equalTo(safeAreaLayoutGuide.snp.horizontalEdges).inset(5)
+            make.top.equalTo(seriesButton.snp.bottom).offset(BookSpacing.vertical)
+            make.horizontalEdges.equalTo(safeAreaLayoutGuide.snp.horizontalEdges).inset(BookSpacing.horizontal)
+        }
+        
+        dedicationView.snp.makeConstraints { make in
+            make.top.equalTo(bookInfoView.snp.bottom).offset(BookSpacing.vertical)
+            make.horizontalEdges.equalToSuperview().inset(BookSpacing.horizontal)
+        }
+        
+        summaryView.snp.makeConstraints { make in
+            make.top.equalTo(dedicationView.snp.bottom).offset(BookSpacing.vertical)
+            make.horizontalEdges.equalToSuperview().inset(BookSpacing.horizontal)
         }
     }
     
@@ -69,6 +85,8 @@ final class HomeView: UIView {
         titleLabel.text = book.title
         seriesButton.setTitle(String(book.seriesNumber!), for: .normal)
         bookInfoView.configureView(with: book)
+        dedicationView.configureView(title: SectionTitle.dedication, content: book.dedication)
+        summaryView.configureView(title: SectionTitle.summary, content: book.summary)
     }
 
 }

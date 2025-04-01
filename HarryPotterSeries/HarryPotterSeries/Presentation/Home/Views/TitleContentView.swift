@@ -1,5 +1,5 @@
 //
-//  TitleValueView.swift
+//  TitleContentView.swift
 //  HarryPotterSeries
 //
 //  Created by 곽다은 on 3/31/25.
