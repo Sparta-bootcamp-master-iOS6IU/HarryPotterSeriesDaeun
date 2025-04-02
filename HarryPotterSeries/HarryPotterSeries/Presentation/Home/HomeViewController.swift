@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import CombineCocoa
 
 final class HomeViewController: UIViewController {
     // MARK: - Properties
@@ -35,6 +36,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         bindViewModel()
+        bindView()
         viewModel.loadBooks()
         viewModel.change()
     }
@@ -58,11 +60,27 @@ final class HomeViewController: UIViewController {
             .store(in: &cancellables)
         
         viewModel.$summaryText
-            .combineLatest(viewModel.$showToggleButton)
+            .combineLatest(viewModel.$showExpandButton)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] summary, show in
-                guard let summary, let show else { return }
+                guard let summary else { return }
                 self?.homeView.setSummary(with: summary, isExpandable: show)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$isExpandedSummary
+        
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isExpanded in
+                self?.homeView.summaryView.updateExpandButtonState(isExpanded: isExpanded)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindView() {
+        homeView.summaryView.expandButton.tapPublisher
+            .sink { [weak self] in
+                self?.viewModel.toggleExpandButton()
             }
             .store(in: &cancellables)
     }

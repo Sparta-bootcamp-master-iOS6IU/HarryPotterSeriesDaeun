@@ -9,11 +9,21 @@ import Foundation
 
 final class HomeViewModel {
     private let fetchBookUseCase: FetchBooksUseCase
-    @Published private(set) var books: [Book] = []
+    private var books: [Book] = []
     @Published private(set) var selectedBook: Book!
     @Published private(set) var errorMessage: String?
     @Published private(set) var summaryText: String?
-    @Published private(set) var showToggleButton: Bool?
+    @Published private(set) var showExpandButton: Bool = false
+    @Published private(set) var isExpandedSummary: Bool = false
+    
+    private var isLongSummary: Bool {
+        selectedBook.summary.count > BookNumber.shortSummary
+    }
+    
+    private var shortenedSummary: String {
+        guard isLongSummary else { return selectedBook.summary }
+        return String(selectedBook.summary.prefix(BookNumber.shortSummary)) + CommonString.ellipsis
+    }
     
     init(fetchBookUseCase: FetchBooksUseCase) {
         self.fetchBookUseCase = fetchBookUseCase
@@ -21,7 +31,7 @@ final class HomeViewModel {
     
     // TODO: 다른 책 선택 확인용, 삭제 예정
     func change() {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 3) { [weak self] in
+        DispatchQueue.global().asyncAfter(deadline: .now() + 5) { [weak self] in
             guard let self else { return }
             selectedBook = books[1]
             updateSummaryInfo(for: selectedBook)
@@ -41,12 +51,16 @@ final class HomeViewModel {
     }
     
     private func updateSummaryInfo(for book: Book) {
-        if book.summary.count > BookNumber.shortSummary {
-            summaryText = String(book.summary.prefix(BookNumber.shortSummary)) + CommonString.ellipsis
-            showToggleButton = true
-        } else {
-            summaryText = book.summary
-            showToggleButton = false
-        }
+        showExpandButton = isLongSummary
+        updateSummaryText()
+    }
+    
+    func toggleExpandButton() {
+        isExpandedSummary.toggle()
+        updateSummaryText()
+    }
+    
+    private func updateSummaryText() {
+        summaryText = isExpandedSummary ? selectedBook.summary : shortenedSummary
     }
 }

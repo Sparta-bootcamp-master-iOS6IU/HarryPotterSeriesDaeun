@@ -31,7 +31,7 @@ final class BookDescriptionView: UIView {
         $0.distribution = .equalSpacing
     }
     
-    private let toggleButton = UIButton().then {
+    let expandButton = UIButton().then {
         $0.setTitle(ButtonTitle.expand, for: .normal)
         $0.setTitle(ButtonTitle.fold, for: .selected)
         $0.setTitleColor(.systemBlue, for: .normal)
@@ -61,7 +61,7 @@ final class BookDescriptionView: UIView {
         
         [
             contentStackView,
-            toggleButton
+            expandButton
         ].forEach { containerStackView.addArrangedSubview($0) }
     }
     
@@ -80,7 +80,7 @@ final class BookDescriptionView: UIView {
         titleLabel.text = title
         contentStackView.subviews.forEach { $0.removeFromSuperview() }
         addSubviewsToContentStack(with: contents)
-        setToggleButtonVisible(isExpandable)
+        setExpandButtonVisible(isExpandable)
     }
     
     private func addSubviewsToContentStack(with contents: [String]) {
@@ -95,7 +95,11 @@ final class BookDescriptionView: UIView {
         }
     }
     
-    func setToggleButtonVisible(_ isExpandable: Bool) {
-        toggleButton.isHidden = !isExpandable
+    private func setExpandButtonVisible(_ isExpandable: Bool) {
+        expandButton.isHidden = !isExpandable
+    }
+    
+    func updateExpandButtonState(isExpanded isSeleced: Bool) {
+        expandButton.isSelected = isSeleced
     }
 }

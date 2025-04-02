@@ -35,7 +35,7 @@ final class HomeView: UIView {
     
     private let bookInfoView = BookInfoView()
     private let dedicationView = BookDescriptionView()
-    private let summaryView = BookDescriptionView()
+    private(set) var summaryView = BookDescriptionView()
     private let chapterView = BookDescriptionView()
     
     // MARK: - Init
