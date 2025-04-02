@@ -30,15 +30,6 @@ final class HomeViewModel {
         isExpandedSummary = self.loadExpandState()
     }
     
-    // TODO: 다른 책 선택 확인용, 삭제 예정
-    func change() {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 5) { [weak self] in
-            guard let self else { return }
-            selectedBook = books[1]
-            updateSummaryInfo(for: selectedBook)
-        }
-    }
-    
     func loadBooks() {
         do {
             books = try fetchBookUseCase.execute()
@@ -72,5 +63,10 @@ final class HomeViewModel {
     
     func loadExpandState() -> Bool {
         UserDefaults.standard.bool(forKey: UserDefaultsKey.summaryExpandState)
+    }
+    
+    func isTappedSeriesButton(of index: Int) {
+        selectedBook = books[index]
+        updateSummaryInfo(for: selectedBook)
     }
 }

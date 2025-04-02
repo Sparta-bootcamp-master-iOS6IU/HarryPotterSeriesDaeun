@@ -5,12 +5,20 @@
 //  Created by 곽다은 on 3/28/25.
 //
 
+import Combine
 import UIKit
 import SnapKit
 import Then
 
 final class HomeView: UIView {
+    
+    // MARK: - Event Properties
+    
+    let seriesButtonTapped = PassthroughSubject<Int, Never>()
+    var cancellables = [AnyCancellable]()
+    
     // MARK: - Components
+    
     private let titleLabel = UILabel().then {
         $0.textAlignment = .center
         $0.font = .boldSystemFont(ofSize: 24)
@@ -106,9 +114,10 @@ final class HomeView: UIView {
     }
     
     func setSeriesButtons(books: [Book]) {
-        books.forEach { book in
+        books.enumerated().forEach { index, book in
             let button = makeSeriesButton(number: book.seriesNumber!)
             seriesButtonStackView.addArrangedSubview(button)
+            bindSeriesButtonTap(button, at: index)
         }
     }
     
@@ -123,5 +132,13 @@ final class HomeView: UIView {
             make.width.height.equalTo(40)
         }
         return button
+    }
+    
+    private func bindSeriesButtonTap(_ button: UIButton, at index: Int) {
+        button.tapPublisher
+            .sink { [weak self] in
+                self?.seriesButtonTapped.send(index)
+            }
+            .store(in: &cancellables)
     }
 }

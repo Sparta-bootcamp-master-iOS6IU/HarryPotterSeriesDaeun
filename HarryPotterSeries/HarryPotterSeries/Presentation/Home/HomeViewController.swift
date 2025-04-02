@@ -38,7 +38,6 @@ final class HomeViewController: UIViewController {
         bindViewModel()
         bindView()
         viewModel.loadBooks()
-        viewModel.change()
     }
     
     // MARK: - Methods
@@ -88,6 +87,13 @@ final class HomeViewController: UIViewController {
         homeView.summaryView.expandButton.tapPublisher
             .sink { [weak self] in
                 self?.viewModel.toggleExpandButton()
+            }
+            .store(in: &cancellables)
+        
+        homeView.seriesButtonTapped
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] index in
+                self?.viewModel.isTappedSeriesButton(of: index)
             }
             .store(in: &cancellables)
     }
