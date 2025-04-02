@@ -19,11 +19,23 @@ final class BookDescriptionView: UIView {
         $0.textColor = .black
     }
     
+    private let containerStackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = .zero
+    }
+    
     private let contentStackView = UIStackView().then {
         $0.axis = .vertical
         $0.spacing = BookSpacing.labelToLabel
         $0.alignment = .fill
         $0.distribution = .equalSpacing
+    }
+    
+    private let toggleButton = UIButton().then {
+        $0.setTitle(ButtonTitle.expand, for: .normal)
+        $0.setTitle(ButtonTitle.fold, for: .selected)
+        $0.setTitleColor(.systemBlue, for: .normal)
+        $0.titleLabel?.font = .systemFont(ofSize: BookFontSize.content)
     }
     
     // MARK: - Init
@@ -44,8 +56,13 @@ final class BookDescriptionView: UIView {
     private func setupAddViews() {
         [
             titleLabel,
-            contentStackView
+            containerStackView
         ].forEach { addSubview($0) }
+        
+        [
+            contentStackView,
+            toggleButton
+        ].forEach { containerStackView.addArrangedSubview($0) }
     }
     
     private func setupConstraints() {
@@ -53,15 +70,20 @@ final class BookDescriptionView: UIView {
             make.top.horizontalEdges.equalToSuperview()
         }
         
-        contentStackView.snp.makeConstraints { make in
+        containerStackView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(BookSpacing.labelToLabel)
             make.horizontalEdges.bottom.equalToSuperview()
         }
     }
     
-    func configureView(title: String, contents: [String]) {
+    func configureView(title: String, contents: [String], _ isExpandable: Bool = false) {
         titleLabel.text = title
-        
+        contentStackView.subviews.forEach { $0.removeFromSuperview() }
+        addSubviewsToContentStack(with: contents)
+        setToggleButtonVisible(isExpandable)
+    }
+    
+    private func addSubviewsToContentStack(with contents: [String]) {
         for content in contents {
             let contentLabel = UILabel().then {
                 $0.numberOfLines = .zero
@@ -71,5 +93,9 @@ final class BookDescriptionView: UIView {
             }
             contentStackView.addArrangedSubview(contentLabel)
         }
+    }
+    
+    func setToggleButtonVisible(_ isExpandable: Bool) {
+        toggleButton.isHidden = !isExpandable
     }
 }

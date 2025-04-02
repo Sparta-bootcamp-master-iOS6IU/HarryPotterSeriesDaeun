@@ -99,8 +99,10 @@ final class HomeView: UIView {
         seriesButton.setTitle(String(book.seriesNumber!), for: .normal)
         bookInfoView.configureView(with: book)
         dedicationView.configureView(title: SectionTitle.dedication, contents: [book.dedication])
-        summaryView.configureView(title: SectionTitle.summary, contents: [book.summary])
         chapterView.configureView(title: SectionTitle.chapter, contents: book.chapters.map { $0.title })
     }
-
+    
+    func setSummary(with summary: String, isExpandable: Bool) {
+        summaryView.configureView(title: SectionTitle.summary, contents: [summary], isExpandable)
+    }
 }
