@@ -19,11 +19,6 @@ final class BookDescriptionView: UIView {
         $0.textColor = .black
     }
     
-    private let containerStackView = UIStackView().then {
-        $0.axis = .vertical
-        $0.spacing = .zero
-    }
-    
     private let contentStackView = UIStackView().then {
         $0.axis = .vertical
         $0.spacing = BookSpacing.labelToLabel
@@ -56,13 +51,8 @@ final class BookDescriptionView: UIView {
     private func setupAddViews() {
         [
             titleLabel,
-            containerStackView
+            contentStackView
         ].forEach { addSubview($0) }
-        
-        [
-            contentStackView,
-            expandButton
-        ].forEach { containerStackView.addArrangedSubview($0) }
     }
     
     private func setupConstraints() {
@@ -70,7 +60,7 @@ final class BookDescriptionView: UIView {
             make.top.horizontalEdges.equalToSuperview()
         }
         
-        containerStackView.snp.makeConstraints { make in
+        contentStackView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(BookSpacing.labelToLabel)
             make.horizontalEdges.bottom.equalToSuperview()
         }
@@ -93,6 +83,7 @@ final class BookDescriptionView: UIView {
             }
             contentStackView.addArrangedSubview(contentLabel)
         }
+        contentStackView.addArrangedSubview(expandButton)
     }
     
     private func setExpandButtonVisible(_ isExpandable: Bool) {
