@@ -30,6 +30,7 @@ enum SectionTitle {
     static let pages = "Pages"
     static let dedication = "Dedication"
     static let summary = "Summary"
+    static let chapter = "Chapter"
 }
 
 enum BookSpacing {
