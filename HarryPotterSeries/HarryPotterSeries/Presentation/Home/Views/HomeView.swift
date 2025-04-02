@@ -17,10 +17,11 @@ final class HomeView: UIView {
         $0.numberOfLines = 0
     }
     
-    private let seriesButton = UIButton().then {
-        $0.titleLabel?.font = .systemFont(ofSize: 16)
-        $0.backgroundColor = .systemBlue
-        $0.layer.cornerRadius = 20
+    let seriesButtonStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.spacing = BookSpacing.viewToView
+        $0.alignment = .center
+        $0.distribution = .equalSpacing
     }
     
     private let scrollView = UIScrollView().then {
@@ -55,7 +56,7 @@ final class HomeView: UIView {
     private func setupAddViews() {
         [
             titleLabel,
-            seriesButton,
+            seriesButtonStackView,
             scrollView
         ].forEach { addSubview($0) }
         
@@ -77,14 +78,13 @@ final class HomeView: UIView {
             make.horizontalEdges.equalToSuperview().inset(BookSpacing.horizontal)
         }
         
-        seriesButton.snp.makeConstraints { make in
+        seriesButtonStackView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
-            make.width.height.equalTo(40)
         }
         
         scrollView.snp.makeConstraints { make in
-            make.top.equalTo(seriesButton.snp.bottom).offset(BookSpacing.vertical)
+            make.top.equalTo(seriesButtonStackView.snp.bottom).offset(BookSpacing.vertical)
             make.horizontalEdges.bottom.equalToSuperview()
         }
         
@@ -96,7 +96,6 @@ final class HomeView: UIView {
     
     func configureView(with book: Book) {
         titleLabel.text = book.title
-        seriesButton.setTitle(String(book.seriesNumber!), for: .normal)
         bookInfoView.configureView(with: book)
         dedicationView.configureView(title: SectionTitle.dedication, contents: [book.dedication])
         chapterView.configureView(title: SectionTitle.chapter, contents: book.chapters.map { $0.title })
@@ -104,5 +103,25 @@ final class HomeView: UIView {
     
     func setSummary(with summary: String, isExpandable: Bool) {
         summaryView.configureView(title: SectionTitle.summary, contents: [summary], isExpandable)
+    }
+    
+    func setSeriesButtons(books: [Book]) {
+        books.forEach { book in
+            let button = makeSeriesButton(number: book.seriesNumber!)
+            seriesButtonStackView.addArrangedSubview(button)
+        }
+    }
+    
+    private func makeSeriesButton(number: Int) -> UIButton {
+        let button = UIButton().then {
+            $0.setTitle(String(number), for: .normal)
+            $0.titleLabel?.font = .systemFont(ofSize: 16)
+            $0.backgroundColor = .systemBlue
+            $0.layer.cornerRadius = 20
+        }
+        button.snp.makeConstraints { make in
+            make.width.height.equalTo(40)
+        }
+        return button
     }
 }

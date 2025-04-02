@@ -9,7 +9,7 @@ import Foundation
 
 final class HomeViewModel {
     private let fetchBookUseCase: FetchBooksUseCase
-    private var books: [Book] = []
+    @Published private(set) var books: [Book] = []
     @Published private(set) var selectedBook: Book!
     @Published private(set) var errorMessage: String?
     @Published private(set) var summaryText: String?

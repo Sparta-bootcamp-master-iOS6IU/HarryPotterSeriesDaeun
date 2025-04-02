@@ -43,6 +43,13 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Methods
     private func bindViewModel() {
+        viewModel.$books
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] books in
+                self?.homeView.setSeriesButtons(books: books)
+            }
+            .store(in: &cancellables)
+        
         viewModel.$selectedBook
             .receive(on: DispatchQueue.main)
             .sink { [weak self] book in
