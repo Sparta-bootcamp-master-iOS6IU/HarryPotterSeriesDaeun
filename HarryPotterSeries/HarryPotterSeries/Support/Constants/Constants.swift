@@ -57,3 +57,7 @@ enum CommonString {
 enum BookNumber {
     static let shortSummary = 450
 }
+
+enum UserDefaultsKey {
+    static let summaryExpandState = "summaryExpandState"
+}

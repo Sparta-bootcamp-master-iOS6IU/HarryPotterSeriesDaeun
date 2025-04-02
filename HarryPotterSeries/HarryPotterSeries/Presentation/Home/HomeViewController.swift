@@ -69,7 +69,7 @@ final class HomeViewController: UIViewController {
             .store(in: &cancellables)
         
         viewModel.$isExpandedSummary
-        
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isExpanded in
                 self?.homeView.summaryView.updateExpandButtonState(isExpanded: isExpanded)

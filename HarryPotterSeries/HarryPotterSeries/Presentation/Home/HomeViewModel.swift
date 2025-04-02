@@ -14,7 +14,7 @@ final class HomeViewModel {
     @Published private(set) var errorMessage: String?
     @Published private(set) var summaryText: String?
     @Published private(set) var showExpandButton: Bool = false
-    @Published private(set) var isExpandedSummary: Bool = false
+    @Published private(set) var isExpandedSummary: Bool!
     
     private var isLongSummary: Bool {
         selectedBook.summary.count > BookNumber.shortSummary
@@ -27,6 +27,7 @@ final class HomeViewModel {
     
     init(fetchBookUseCase: FetchBooksUseCase) {
         self.fetchBookUseCase = fetchBookUseCase
+        isExpandedSummary = self.loadExpandState()
     }
     
     // TODO: 다른 책 선택 확인용, 삭제 예정
@@ -58,9 +59,18 @@ final class HomeViewModel {
     func toggleExpandButton() {
         isExpandedSummary.toggle()
         updateSummaryText()
+        saveExpandState(isExpanded: isExpandedSummary)
     }
     
     private func updateSummaryText() {
         summaryText = isExpandedSummary ? selectedBook.summary : shortenedSummary
+    }
+    
+    func saveExpandState(isExpanded: Bool) {
+        UserDefaults.standard.set(isExpanded, forKey: UserDefaultsKey.summaryExpandState)
+    }
+    
+    func loadExpandState() -> Bool {
+        UserDefaults.standard.bool(forKey: UserDefaultsKey.summaryExpandState)
     }
 }
