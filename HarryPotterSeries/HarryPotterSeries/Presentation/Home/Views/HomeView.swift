@@ -104,6 +104,7 @@ final class HomeView: UIView {
     
     func configureView(with book: Book) {
         titleLabel.text = book.title
+        updateSeriesButtonStack(seriesNumber: book.seriesNumber!)
         bookInfoView.configureView(with: book)
         dedicationView.configureView(title: SectionTitle.dedication, contents: [book.dedication])
         chapterView.configureView(title: SectionTitle.chapter, contents: book.chapters.map { $0.title })
@@ -112,26 +113,45 @@ final class HomeView: UIView {
     func setSummary(with summary: String, isExpandable: Bool) {
         summaryView.configureView(title: SectionTitle.summary, contents: [summary], isExpandable)
     }
-    
+}
+
+// MARK: - Series Buttons
+extension HomeView {
     func setSeriesButtons(books: [Book]) {
         books.enumerated().forEach { index, book in
-            let button = makeSeriesButton(number: book.seriesNumber!)
+            let button = makeSeriesButton(of: book.seriesNumber!)
             seriesButtonStackView.addArrangedSubview(button)
             bindSeriesButtonTap(button, at: index)
         }
     }
     
-    private func makeSeriesButton(number: Int) -> UIButton {
-        let button = UIButton().then {
-            $0.setTitle(String(number), for: .normal)
-            $0.titleLabel?.font = .systemFont(ofSize: 16)
-            $0.backgroundColor = .systemBlue
-            $0.layer.cornerRadius = 20
-        }
+    private func makeSeriesButton(of seriesNumber: Int) -> UIButton {
+        let config = makeButtonConfiguration(title: String(seriesNumber))
+        let button = UIButton(configuration: config)
+        applySelectedStyle(for: button)
+        
         button.snp.makeConstraints { make in
             make.width.height.equalTo(40)
         }
         return button
+    }
+    
+    private func makeButtonConfiguration(title: String) -> UIButton.Configuration {
+        var config = UIButton.Configuration.filled()
+        config.title = title
+        config.baseBackgroundColor = .systemGray6
+        config.baseForegroundColor = .systemBlue
+        config.cornerStyle = .capsule
+        return config
+    }
+    
+    private func applySelectedStyle(for button: UIButton) {
+        button.configurationUpdateHandler = { button in
+            var updated = button.configuration
+            updated?.baseBackgroundColor = button.isSelected ? .systemBlue : .systemGray6
+            updated?.baseForegroundColor = button.isSelected ? .white : .systemBlue
+            button.configuration = updated
+        }
     }
     
     private func bindSeriesButtonTap(_ button: UIButton, at index: Int) {
@@ -140,5 +160,12 @@ final class HomeView: UIView {
                 self?.seriesButtonTapped.send(index)
             }
             .store(in: &cancellables)
+    }
+    
+    private func updateSeriesButtonStack(seriesNumber: Int) {
+        seriesButtonStackView.subviews.enumerated().forEach { index, view in
+            let button = view as! UIButton
+            button.isSelected = index == seriesNumber - 1
+        }
     }
 }
