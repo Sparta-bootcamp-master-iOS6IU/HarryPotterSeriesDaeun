@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import CombineCocoa
 
 final class HomeViewController: UIViewController {
     // MARK: - Properties
@@ -14,7 +15,7 @@ final class HomeViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - View
-    let homeView = HomeView()
+    private let homeView = HomeView()
     
     override func loadView() {
         view = homeView
@@ -35,7 +36,9 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         bindViewModel()
+        bindView()
         viewModel.loadBooks()
+        viewModel.change()
     }
     
     // MARK: - Methods
@@ -43,8 +46,8 @@ final class HomeViewController: UIViewController {
         viewModel.$selectedBook
             .receive(on: DispatchQueue.main)
             .sink { [weak self] book in
-                guard let book else { return }
-                self?.homeView.configureView(with: book)
+                guard let self, let book else { return }
+                homeView.configureView(with: book)
             }
             .store(in: &cancellables)
         
@@ -53,6 +56,31 @@ final class HomeViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] errorMessage in
                 self?.showAlert(title: AlertTitle.networkError, message: errorMessage)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$summaryText
+            .combineLatest(viewModel.$showExpandButton)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] summary, show in
+                guard let summary else { return }
+                self?.homeView.setSummary(with: summary, isExpandable: show)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$isExpandedSummary
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isExpanded in
+                self?.homeView.summaryView.updateExpandButtonState(isExpanded: isExpanded)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindView() {
+        homeView.summaryView.expandButton.tapPublisher
+            .sink { [weak self] in
+                self?.viewModel.toggleExpandButton()
             }
             .store(in: &cancellables)
     }

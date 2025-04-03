@@ -26,6 +26,13 @@ final class BookDescriptionView: UIView {
         $0.distribution = .equalSpacing
     }
     
+    let expandButton = UIButton().then {
+        $0.setTitle(ButtonTitle.expand, for: .normal)
+        $0.setTitle(ButtonTitle.fold, for: .selected)
+        $0.setTitleColor(.systemBlue, for: .normal)
+        $0.titleLabel?.font = .systemFont(ofSize: BookFontSize.content)
+    }
+    
     // MARK: - Init
     
     override init(frame: CGRect) {
@@ -59,9 +66,14 @@ final class BookDescriptionView: UIView {
         }
     }
     
-    func configureView(title: String, contents: [String]) {
+    func configureView(title: String, contents: [String], _ isExpandable: Bool = false) {
         titleLabel.text = title
-        
+        contentStackView.subviews.forEach { $0.removeFromSuperview() }
+        addSubviewsToContentStack(with: contents)
+        setExpandButtonVisible(isExpandable)
+    }
+    
+    private func addSubviewsToContentStack(with contents: [String]) {
         for content in contents {
             let contentLabel = UILabel().then {
                 $0.numberOfLines = .zero
@@ -71,5 +83,14 @@ final class BookDescriptionView: UIView {
             }
             contentStackView.addArrangedSubview(contentLabel)
         }
+        contentStackView.addArrangedSubview(expandButton)
+    }
+    
+    private func setExpandButtonVisible(_ isExpandable: Bool) {
+        expandButton.isHidden = !isExpandable
+    }
+    
+    func updateExpandButtonState(isExpanded isSeleced: Bool) {
+        expandButton.isSelected = isSeleced
     }
 }

@@ -33,6 +33,11 @@ enum SectionTitle {
     static let chapter = "Chapter"
 }
 
+enum ButtonTitle {
+    static let fold = "접기"
+    static let expand = "더 보기"
+}
+
 enum BookSpacing {
     static let horizontal: CGFloat = 20
     static let vertical: CGFloat = 24
@@ -43,4 +48,16 @@ enum BookFontSize {
     static let title1: CGFloat = 18
     static let title2: CGFloat = 14
     static let content: CGFloat = 14
+}
+
+enum CommonString {
+    static let ellipsis = "..."
+}
+
+enum BookNumber {
+    static let shortSummary = 450
+}
+
+enum UserDefaultsKey {
+    static let summaryExpandState = "summaryExpandState"
 }
