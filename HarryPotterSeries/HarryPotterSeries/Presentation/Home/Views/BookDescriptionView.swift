@@ -21,7 +21,7 @@ final class BookDescriptionView: UIView {
     
     private let contentStackView = UIStackView().then {
         $0.axis = .vertical
-        $0.spacing = BookSpacing.labelToLabel
+        $0.spacing = BookSpacing.viewToView
         $0.alignment = .fill
         $0.distribution = .equalSpacing
     }
@@ -61,7 +61,7 @@ final class BookDescriptionView: UIView {
         }
         
         contentStackView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(BookSpacing.labelToLabel)
+            make.top.equalTo(titleLabel.snp.bottom).offset(BookSpacing.viewToView)
             make.horizontalEdges.bottom.equalToSuperview()
         }
     }

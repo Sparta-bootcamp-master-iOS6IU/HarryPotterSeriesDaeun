@@ -9,7 +9,7 @@ import Foundation
 
 final class HomeViewModel {
     private let fetchBookUseCase: FetchBooksUseCase
-    private var books: [Book] = []
+    @Published private(set) var books: [Book] = []
     @Published private(set) var selectedBook: Book!
     @Published private(set) var errorMessage: String?
     @Published private(set) var summaryText: String?
@@ -28,15 +28,6 @@ final class HomeViewModel {
     init(fetchBookUseCase: FetchBooksUseCase) {
         self.fetchBookUseCase = fetchBookUseCase
         isExpandedSummary = self.loadExpandState()
-    }
-    
-    // TODO: 다른 책 선택 확인용, 삭제 예정
-    func change() {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 5) { [weak self] in
-            guard let self else { return }
-            selectedBook = books[1]
-            updateSummaryInfo(for: selectedBook)
-        }
     }
     
     func loadBooks() {
@@ -72,5 +63,10 @@ final class HomeViewModel {
     
     func loadExpandState() -> Bool {
         UserDefaults.standard.bool(forKey: UserDefaultsKey.summaryExpandState)
+    }
+    
+    func isTappedSeriesButton(of index: Int) {
+        selectedBook = books[index]
+        updateSummaryInfo(for: selectedBook)
     }
 }

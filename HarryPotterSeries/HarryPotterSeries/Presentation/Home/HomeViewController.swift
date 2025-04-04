@@ -38,11 +38,17 @@ final class HomeViewController: UIViewController {
         bindViewModel()
         bindView()
         viewModel.loadBooks()
-        viewModel.change()
     }
     
     // MARK: - Methods
     private func bindViewModel() {
+        viewModel.$books
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] books in
+                self?.homeView.setSeriesButtons(books: books)
+            }
+            .store(in: &cancellables)
+        
         viewModel.$selectedBook
             .receive(on: DispatchQueue.main)
             .sink { [weak self] book in
@@ -81,6 +87,13 @@ final class HomeViewController: UIViewController {
         homeView.summaryView.expandButton.tapPublisher
             .sink { [weak self] in
                 self?.viewModel.toggleExpandButton()
+            }
+            .store(in: &cancellables)
+        
+        homeView.seriesButtonTapped
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] index in
+                self?.viewModel.isTappedSeriesButton(of: index)
             }
             .store(in: &cancellables)
     }

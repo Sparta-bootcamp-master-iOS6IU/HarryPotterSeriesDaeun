@@ -41,7 +41,7 @@ enum ButtonTitle {
 enum BookSpacing {
     static let horizontal: CGFloat = 20
     static let vertical: CGFloat = 24
-    static let labelToLabel: CGFloat = 8
+    static let viewToView: CGFloat = 8
 }
 
 enum BookFontSize {
